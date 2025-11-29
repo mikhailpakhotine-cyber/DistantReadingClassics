@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Distant Reading Analysis - Russian Classics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -604,35 +604,49 @@
         }
 
         function renderWordCloud(textKey) {
-            const data = analysisData[textKey];
-            const canvas = document.getElementById(`wordcloud-${textKey}`);
+            try {
+                const data = analysisData[textKey];
+                const canvas = document.getElementById(`wordcloud-${textKey}`);
 
-            if (!canvas) return;
+                if (!canvas) {
+                    console.error(`Canvas not found: wordcloud-${textKey}`);
+                    return;
+                }
 
-            // Prepare word cloud data
-            const wordList = data.word_frequency.top_words_content.slice(0, 100).map(([word, count]) => {
-                return [word, count];
-            });
+                if (typeof WordCloud === 'undefined') {
+                    console.error('WordCloud library not loaded');
+                    return;
+                }
 
-            // Clear canvas
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Set canvas size
+                canvas.width = canvas.offsetWidth || 800;
+                canvas.height = canvas.offsetHeight || 500;
 
-            // Generate word cloud
-            WordCloud(canvas, {
-                list: wordList,
-                gridSize: 8,
-                weightFactor: function(size) {
-                    return Math.pow(size, 0.5) * 3;
-                },
-                fontFamily: 'Times, serif',
-                color: function() {
-                    const colors = ['#667eea', '#764ba2', '#2c3e50', '#34495e', '#5f27cd'];
-                    return colors[Math.floor(Math.random() * colors.length)];
-                },
-                rotateRatio: 0.3,
-                backgroundColor: '#f8f9fa'
-            });
+                // Prepare word cloud data
+                const wordList = data.word_frequency.top_words_content.slice(0, 100).map(([word, count]) => {
+                    return [word, count];
+                });
+
+                console.log(`Rendering word cloud for ${textKey} with ${wordList.length} words`);
+
+                // Generate word cloud
+                WordCloud(canvas, {
+                    list: wordList,
+                    gridSize: 8,
+                    weightFactor: function(size) {
+                        return Math.pow(size, 0.5) * 3;
+                    },
+                    fontFamily: 'Times, serif',
+                    color: function() {
+                        const colors = ['#667eea', '#764ba2', '#2c3e50', '#34495e', '#5f27cd'];
+                        return colors[Math.floor(Math.random() * colors.length)];
+                    },
+                    rotateRatio: 0.3,
+                    backgroundColor: '#f8f9fa'
+                });
+            } catch (error) {
+                console.error(`Error rendering word cloud for ${textKey}:`, error);
+            }
         }
 
         function renderPOSChart(textKey, posData) {
