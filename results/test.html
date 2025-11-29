@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Page</title>
+</head>
+<body>
+    <h1>Test Page</h1>
+    <p>If you can see this, basic HTML is working.</p>
+    <div id="test-output"></div>
+
+    <script>
+        document.getElementById('test-output').innerHTML = '<p style="color: green;">JavaScript is working!</p>';
+
+        // Test if the data from index.html would work
+        const testData = {"test": "value"};
+        console.log('Data loaded:', testData);
+
+        alert('Test page loaded successfully!');
+    </script>
+</body>
+</html>

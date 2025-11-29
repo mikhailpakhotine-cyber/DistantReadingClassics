@@ -455,15 +455,35 @@
         }
 
         function initializeVisualizations() {
-            // Render both texts
-            renderTextAnalysis('dostoyevsky');
-            renderTextAnalysis('chernyshevsky');
+            try {
+                console.log('Starting initialization...');
+                console.log('Analysis data available:', analysisData ? 'Yes' : 'No');
 
-            // Render comparison
-            renderComparison();
+                // Render both texts
+                console.log('Rendering Dostoyevsky analysis...');
+                renderTextAnalysis('dostoyevsky');
 
-            // Render initial word cloud
-            setTimeout(() => renderWordCloud('dostoyevsky'), 100);
+                console.log('Rendering Chernyshevsky analysis...');
+                renderTextAnalysis('chernyshevsky');
+
+                // Render comparison
+                console.log('Rendering comparison...');
+                renderComparison();
+
+                // Render initial word cloud
+                console.log('Rendering word cloud...');
+                setTimeout(() => renderWordCloud('dostoyevsky'), 100);
+
+                console.log('✓ Initialization complete!');
+            } catch (error) {
+                console.error('Error in initializeVisualizations:', error);
+                document.querySelector('.content').innerHTML =
+                    `<div style="padding: 40px; color: red; background: #fee; border: 2px solid red; margin: 20px; border-radius: 10px;">
+                        <h2>Error Loading Visualization</h2>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Please check the browser console (F12) for more details.</p>
+                    </div>`;
+            }
         }
 
         function renderTextAnalysis(textKey) {
