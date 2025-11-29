@@ -310,13 +310,13 @@
         </header>
 
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('dostoyevsky')">
+            <button class="tab active" onclick="switchTab('dostoyevsky', event)">
                 Dostoyevsky<br><small>Notes from the Underground</small>
             </button>
-            <button class="tab" onclick="switchTab('chernyshevsky')">
+            <button class="tab" onclick="switchTab('chernyshevsky', event)">
                 Chernyshevsky<br><small>What Is To Be Done?</small>
             </button>
-            <button class="tab" onclick="switchTab('comparison')">
+            <button class="tab" onclick="switchTab('comparison', event)">
                 Comparison<br><small>Comparative Analysis</small>
             </button>
         </div>
@@ -432,10 +432,15 @@
             initializeVisualizations();
         });
 
-        function switchTab(tabName) {
+        function switchTab(tabName, event) {
             // Update tab buttons
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            event.target.closest('.tab').classList.add('active');
+            if (event) {
+                event.target.classList.add('active');
+            } else {
+                // Fallback if called without event
+                document.querySelector(`[onclick*="${tabName}"]`).classList.add('active');
+            }
 
             // Update content
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
